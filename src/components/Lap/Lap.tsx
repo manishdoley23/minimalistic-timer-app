@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useTimerScheduler } from "../../utils/hooks";
 
-const Lap = ({ start }: { start: boolean }) => {
+const Lap = ({ topic, start }: { topic: string; start: boolean }) => {
 	const { setTimerScheduler, timer } = useTimerScheduler();
 
 	useEffect(() => {
@@ -19,8 +19,11 @@ const Lap = ({ start }: { start: boolean }) => {
 	}, [start, setTimerScheduler]);
 
 	return (
-		<div>
-			{timer.hours} : {timer.minutes} : {timer.seconds}
+		<div className="flex gap-5">
+			<p>TOPIC: {topic}</p>
+			<p>
+				{timer.hours} : {timer.minutes} : {timer.seconds}
+			</p>
 		</div>
 	);
 };

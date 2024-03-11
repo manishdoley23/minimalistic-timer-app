@@ -13,12 +13,3 @@ export const LapProvider = ({ children }: { children: React.ReactNode }) => {
 		</LapContext.Provider>
 	);
 };
-
-// hooks
-export const useLap = ({
-	topic,
-	start,
-}: {
-	topic: string;
-	start: boolean;
-}) => {};

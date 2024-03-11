@@ -29,7 +29,7 @@ function App() {
 					{ start: false }
 				);
 			}
-			lapArray.push(<Lap key={idx} start={true} />);
+			lapArray.push(<Lap topic={topicVal} key={idx} start={true} />);
 			return lapArray;
 		});
 	};
@@ -72,7 +72,7 @@ function App() {
 									});
 									laps.push(
 										<Lap
-											// topic={topicVal}
+											topic={topicVal}
 											key={1}
 											start={true}
 										/>
