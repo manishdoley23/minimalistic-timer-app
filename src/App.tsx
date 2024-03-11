@@ -6,7 +6,6 @@ import Lap from "./components/Lap/Lap";
 
 function App() {
 	const { date, time } = useDate();
-	const [topicVal, setTopicVal] = useState("");
 	const {
 		timerScheduler,
 		setTimerScheduler,
@@ -16,6 +15,7 @@ function App() {
 		setStartedOnce,
 	} = useTimerScheduler();
 
+	const [topicVal, setTopicVal] = useState("");
 	const [laps, setLaps] = useState<React.ReactNode[]>([]);
 
 	const handleLapTimings = () => {
@@ -55,8 +55,12 @@ function App() {
 								}
 							/>{" "}
 						</p>
+
+						{/* Start timer */}
 						<p
 							onClick={() => {
+								// If block is for when the user will start the
+								// timer for the first time
 								if (
 									timerScheduler.started === false &&
 									timerScheduler.stopped === true &&
@@ -66,7 +70,16 @@ function App() {
 										started: true,
 										stopped: false,
 									});
-									laps.push(<Lap key={1} start={true} />);
+									laps.push(
+										<Lap
+											// topic={topicVal}
+											key={1}
+											start={true}
+										/>
+									);
+
+									// this block is for when the user has started the timer and
+									// doing rounds of laps later
 								} else if (
 									timerScheduler.started === false &&
 									timerScheduler.stopped === true
@@ -74,6 +87,17 @@ function App() {
 									setTimerScheduler({
 										started: true,
 										stopped: false,
+									});
+									setLaps((prev) => {
+										const lapArray = [
+											...prev,
+										] as React.ReactElement[];
+										const lastIdx = lapArray.length - 1;
+										lapArray[lastIdx] = React.cloneElement(
+											lapArray[lastIdx],
+											{ start: true }
+										);
+										return lapArray;
 									});
 								} else {
 									handleLapTimings();
@@ -84,11 +108,14 @@ function App() {
 							{!timerScheduler.started ? "Start" : "Lap"}
 						</p>
 					</div>
+
+					{/* Stop timer */}
 					<div
 						className={`cursor-pointer ${
 							startedOnce ? "block" : "hidden"
 						}`}
 						onClick={() => {
+							// block for stopping the timer
 							if (
 								timerScheduler.started === true &&
 								timerScheduler.stopped === false
@@ -108,6 +135,7 @@ function App() {
 									);
 									return lapArray;
 								});
+								// block for reset
 							} else {
 								setLaps([]);
 								setTimer({ hours: 0, minutes: 0, seconds: 0 });
