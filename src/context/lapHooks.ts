@@ -1,3 +1,7 @@
-export const useLap = ({ topic, start }: { topic: string; start: boolean }) => {
-	const;
+import { useContext } from "react";
+import { LapContext } from "./LapContext";
+
+export const useGetLaps = () => {
+	console.log("LapContext:", LapContext);
+	return useContext(LapContext);
 };

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { useState } from "react";
 import clsx from "clsx";
 
@@ -6,6 +6,9 @@ import { useTimerScheduler } from "./utils/hooks";
 
 import Lap from "./components/Lap";
 import Date from "./components/Date";
+
+import { LapContext, LapWrapper } from "./context/LapContext";
+import { useGetLaps } from "./context/lapHooks";
 
 function App() {
 	const {
@@ -21,6 +24,9 @@ function App() {
 	const [laps, setLaps] = useState<React.ReactNode[]>([]);
 
 	const lapRef = useRef<HTMLInputElement>(null);
+
+	const lapsCont = useContext(LapContext);
+	console.log("useGetLaps:", useGetLaps());
 
 	const handleLapTimings = () => {
 		setLaps((prev) => {
@@ -175,7 +181,7 @@ function App() {
 
 				{/* Lap part */}
 				<div className="flex flex-col-reverse gap-5">
-					{laps}
+					<LapWrapper>{lapsCont}</LapWrapper>
 					{/* <Lap /> */}
 				</div>
 			</div>
