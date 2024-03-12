@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState } from "react";
-import { useDate, useTimerScheduler } from "./utils/hooks";
+import clsx from "clsx";
 
-import Lap from "./components/Lap/Lap";
+import { useTimerScheduler } from "./utils/hooks";
+
+import Lap from "./components/Lap";
+import Date from "./components/Date";
 
 function App() {
-	const { date, time } = useDate();
 	const {
 		timerScheduler,
 		setTimerScheduler,
@@ -17,6 +19,8 @@ function App() {
 
 	const [topicVal, setTopicVal] = useState("");
 	const [laps, setLaps] = useState<React.ReactNode[]>([]);
+
+	const lapRef = useRef<HTMLInputElement>(null);
 
 	const handleLapTimings = () => {
 		setLaps((prev) => {
@@ -30,6 +34,7 @@ function App() {
 				);
 			}
 			lapArray.push(<Lap topic={topicVal} key={idx} start={true} />);
+			setTopicVal("");
 			return lapArray;
 		});
 	};
@@ -37,31 +42,44 @@ function App() {
 	return (
 		<>
 			<div className="h-screen w-full flex flex-col items-center justify-center">
-				<p>
-					{date}, {time}
-				</p>
+				<Date />
 				<div>
 					{timer.hours} : {timer.minutes} : {timer.seconds}
 				</div>
 				<div className="flex gap-5">
 					<div className="flex">
-						<p className="mr-5">
-							Topic:{" "}
+						<div
+							className={clsx(
+								"flex gap-2",
+								!timerScheduler.started
+									? startedOnce === true
+										? "hidden"
+										: "block"
+									: "block"
+							)}
+						>
+							<p>Topic: </p>
 							<input
-								className="bg-gray-200"
+								ref={lapRef}
+								className={clsx("bg-gray-200")}
 								value={topicVal}
 								onChange={(e) =>
 									setTopicVal(e.currentTarget.value)
 								}
 							/>{" "}
-						</p>
+						</div>
 
 						{/* Start timer */}
 						<p
 							onClick={() => {
-								// If block is for when the user will start the
-								// timer for the first time
-								if (
+								// Block for when the user starts the timer
+								// without setting any topic
+								if (topicVal === "" && laps.length < 1) {
+									alert("Please enter topic");
+
+									// Block is for when the user will start the
+									// timer for the first time
+								} else if (
 									timerScheduler.started === false &&
 									timerScheduler.stopped === true &&
 									startedOnce === false
@@ -77,9 +95,10 @@ function App() {
 											start={true}
 										/>
 									);
+									setTopicVal("");
 
-									// this block is for when the user has started the timer and
-									// doing rounds of laps later
+									// block for when stop is pressed and the timer is waiting
+									// for the user to start it back up
 								} else if (
 									timerScheduler.started === false &&
 									timerScheduler.stopped === true
@@ -99,7 +118,14 @@ function App() {
 										);
 										return lapArray;
 									});
+
+									// this block is for when the user has started the timer and
+									// doing rounds of laps later
 								} else {
+									if (topicVal === "") {
+										alert("Enter a topic");
+										return;
+									}
 									handleLapTimings();
 								}
 							}}
