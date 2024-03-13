@@ -80,7 +80,7 @@ export const useTimerScheduler = (): {
 					...prev,
 					seconds: prev.seconds + 1,
 				}));
-			}, 1);
+			}, 1000);
 
 			return () => {
 				clearInterval(intervalIdsec);

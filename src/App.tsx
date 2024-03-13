@@ -30,11 +30,11 @@ function App() {
 	}) => {
 		setLaps((prev) => {
 			const lapsArray = [...prev] as React.ReactElement[];
-			lapsArray.forEach((node: React.ReactElement, idx) => {
-				if (node.props.idx === idz) {
-					const newEle = React.cloneElement(node, { topic: nTopic });
-					lapsArray[idx] = newEle;
-				}
+			const idx = lapsArray.findIndex(
+				(node: React.ReactElement) => node.props.idx === idz
+			);
+			lapsArray[idx] = React.cloneElement(lapsArray[idx], {
+				topic: nTopic,
 			});
 			return lapsArray;
 		});
@@ -70,8 +70,6 @@ function App() {
 			return addNewLap(lapArray);
 		});
 	};
-
-	console.log("Laps:", laps);
 
 	return (
 		<>

@@ -15,10 +15,7 @@ const Lap = ({
 	const { setTimerScheduler, timer } = useTimerScheduler();
 	const [newTopic, setNewTopic] = useState(topic);
 
-	const onTopicChange = () => {
-		console.log("Lap here");
-		topicChangeCb({ id: idx, nTopic: newTopic });
-	};
+	const onTopicChange = () => topicChangeCb({ id: idx, nTopic: newTopic });
 
 	useEffect(() => {
 		if (start === true) {
