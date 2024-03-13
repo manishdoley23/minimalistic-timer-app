@@ -8,6 +8,13 @@ import { useTimerScheduler } from "./utils/hooks";
 import Lap from "./components/Lap";
 import Date from "./components/Date";
 
+const getFromLocalStorage = (): React.ReactNode[] => {
+	const lapArrayString = localStorage.getItem("Laps");
+	const lapArray = lapArrayString !== null ? JSON.parse(lapArrayString) : [];
+	console.log("LapArray:", typeof lapArray, { lapArray });
+	return [] as React.ReactNode[];
+};
+
 function App() {
 	const {
 		timerScheduler,
@@ -19,7 +26,10 @@ function App() {
 	} = useTimerScheduler();
 
 	const [topicVal, setTopicVal] = useState("");
-	const [laps, setLaps] = useState<React.ReactNode[]>([]);
+	// const [localStorageLaps, setLocalStorageLaps] = useState<React.ReactNode[]>(
+	// 	[]
+	// );
+	const [laps, setLaps] = useState<React.ReactNode[]>(getFromLocalStorage());
 
 	const topicChangeHandler = ({
 		idz,
@@ -70,6 +80,8 @@ function App() {
 			return addNewLap(lapArray);
 		});
 	};
+
+	localStorage.setItem("Laps", JSON.stringify(laps));
 
 	return (
 		<>
@@ -191,6 +203,7 @@ function App() {
 								setLaps([]);
 								setTimer({ hours: 0, minutes: 0, seconds: 0 });
 								setStartedOnce(false);
+								localStorage.removeItem("Laps");
 							}
 						}}
 					>
