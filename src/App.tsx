@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
-import { useState } from "react";
 import clsx from "clsx";
+
+import React from "react";
+import { useState } from "react";
 
 import { useTimerScheduler } from "./utils/hooks";
 
@@ -20,11 +21,43 @@ function App() {
 	const [topicVal, setTopicVal] = useState("");
 	const [laps, setLaps] = useState<React.ReactNode[]>([]);
 
-	const lapRef = useRef<HTMLInputElement>(null);
+	const topicChangeHandler = ({
+		idz,
+		nTopic,
+	}: {
+		idz: number;
+		nTopic: string;
+	}) => {
+		setLaps((prev) => {
+			const lapsArray = [...prev] as React.ReactElement[];
+			lapsArray.forEach((node: React.ReactElement, idx) => {
+				if (node.props.idx === idz) {
+					const newEle = React.cloneElement(node, { topic: nTopic });
+					lapsArray[idx] = newEle;
+				}
+			});
+			return lapsArray;
+		});
+	};
+
+	const addNewLap = (lapArray: React.ReactElement[] | React.ReactNode[]) => {
+		const idx = Math.ceil(Math.random() * 1000);
+		lapArray.push(
+			<Lap
+				idx={idx}
+				start={true}
+				topic={topicVal}
+				topicChangeCb={(val) =>
+					topicChangeHandler({ idz: val.id, nTopic: val.nTopic })
+				}
+				key={idx}
+			/>
+		);
+		return lapArray;
+	};
 
 	const handleLapTimings = () => {
 		setLaps((prev) => {
-			const idx = Math.ceil(Math.random() * 1000);
 			const lapArray = [...prev] as React.ReactElement[];
 			const lapArrayIdx = lapArray.length - 1;
 			if (lapArray[lapArrayIdx] !== undefined) {
@@ -33,11 +66,12 @@ function App() {
 					{ start: false }
 				);
 			}
-			lapArray.push(<Lap topic={topicVal} key={idx} start={true} />);
 			setTopicVal("");
-			return lapArray;
+			return addNewLap(lapArray);
 		});
 	};
+
+	console.log("Laps:", laps);
 
 	return (
 		<>
@@ -60,7 +94,6 @@ function App() {
 						>
 							<p>Topic: </p>
 							<input
-								ref={lapRef}
 								className={clsx("bg-gray-200")}
 								value={topicVal}
 								onChange={(e) =>
@@ -88,13 +121,7 @@ function App() {
 										started: true,
 										stopped: false,
 									});
-									laps.push(
-										<Lap
-											topic={topicVal}
-											key={1}
-											start={true}
-										/>
-									);
+									setLaps(addNewLap(laps));
 									setTopicVal("");
 
 									// block for when stop is pressed and the timer is waiting

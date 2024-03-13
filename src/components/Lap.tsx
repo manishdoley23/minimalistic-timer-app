@@ -1,9 +1,24 @@
 import { useEffect, useState } from "react";
 import { useTimerScheduler } from "../utils/hooks";
 
-const Lap = ({ topic, start }: { topic?: string; start: boolean }) => {
+const Lap = ({
+	idx,
+	topicChangeCb,
+	topic,
+	start,
+}: {
+	idx: number;
+	topicChangeCb: React.Dispatch<{ id: number; nTopic: string }>;
+	topic: string;
+	start: boolean;
+}) => {
 	const { setTimerScheduler, timer } = useTimerScheduler();
 	const [newTopic, setNewTopic] = useState(topic);
+
+	const onTopicChange = () => {
+		console.log("Lap here");
+		topicChangeCb({ id: idx, nTopic: newTopic });
+	};
 
 	useEffect(() => {
 		if (start === true) {
@@ -27,6 +42,7 @@ const Lap = ({ topic, start }: { topic?: string; start: boolean }) => {
 					value={newTopic}
 					onChange={(e) => setNewTopic(e.currentTarget.value)}
 				/>
+				<button onClick={onTopicChange}>Change topic</button>
 				{/* useContext or useRef for changing the topic from the child ?? */}
 			</p>
 			<p>
