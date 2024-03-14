@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
 import { useTimerScheduler } from "./utils/hooks";
@@ -8,11 +8,22 @@ import { useTimerScheduler } from "./utils/hooks";
 import Lap from "./components/Lap";
 import Date from "./components/Date";
 
-const getFromLocalStorage = (): React.ReactNode[] => {
-	const lapArrayString = localStorage.getItem("Laps");
-	const lapArray = lapArrayString !== null ? JSON.parse(lapArrayString) : [];
-	console.log("LapArray:", typeof lapArray, { lapArray });
-	return [] as React.ReactNode[];
+// const getFromLocalStorage = (): React.ReactNode[] => {
+// 	const lapArrayString = localStorage.getItem("Laps");
+// 	const lapArray = lapArrayString !== null ? JSON.parse(lapArrayString) : [];
+// 	console.log("LapArray:", typeof lapArray, { lapArray });
+// 	return [] as React.ReactNode[];
+// };
+
+type LapData = {
+	id: number;
+	time: {
+		seconds: number;
+		minutes: number;
+		hours: number;
+	};
+	started: boolean;
+	topic: string;
 };
 
 function App() {
@@ -26,10 +37,7 @@ function App() {
 	} = useTimerScheduler();
 
 	const [topicVal, setTopicVal] = useState("");
-	// const [localStorageLaps, setLocalStorageLaps] = useState<React.ReactNode[]>(
-	// 	[]
-	// );
-	const [laps, setLaps] = useState<React.ReactNode[]>(getFromLocalStorage());
+	const [lapsData, setLapsData] = useState<LapData[]>([]);
 
 	const topicChangeHandler = ({
 		idz,
@@ -38,50 +46,59 @@ function App() {
 		idz: number;
 		nTopic: string;
 	}) => {
-		setLaps((prev) => {
-			const lapsArray = [...prev] as React.ReactElement[];
-			const idx = lapsArray.findIndex(
-				(node: React.ReactElement) => node.props.idx === idz
-			);
-			lapsArray[idx] = React.cloneElement(lapsArray[idx], {
-				topic: nTopic,
-			});
-			return lapsArray;
+		setLapsData((prev) => {
+			const lapsDataArray = [...prev];
+			const indexTopic = lapsDataArray.findIndex((lap) => lap.id === idz);
+			lapsDataArray[indexTopic].topic = nTopic;
+			return lapsDataArray;
 		});
 	};
 
-	const addNewLap = (lapArray: React.ReactElement[] | React.ReactNode[]) => {
-		const idx = Math.ceil(Math.random() * 1000);
-		lapArray.push(
-			<Lap
-				idx={idx}
-				start={true}
-				topic={topicVal}
-				topicChangeCb={(val) =>
-					topicChangeHandler({ idz: val.id, nTopic: val.nTopic })
-				}
-				key={idx}
-			/>
-		);
-		return lapArray;
+	const lapAddHandler = (val: {
+		id: number;
+		hours: number;
+		seconds: number;
+		minutes: number;
+	}) => {
+		setLapsData((prev) => {
+			const lapsDataArray = [...prev];
+			const lapDataIdx = lapsDataArray.findIndex(
+				(lap) => lap.id === val.id
+			);
+			const { id, ...rest } = val;
+			lapsDataArray[lapDataIdx].time = rest;
+			return lapsDataArray;
+		});
+	};
+
+	const addNewLapData = (lapDataArray: LapData[]) => {
+		const newLapData: LapData = {
+			id: Math.ceil(Math.random() * 1000),
+			started: true,
+			time: {
+				seconds: timer.seconds,
+				minutes: timer.minutes,
+				hours: timer.hours,
+			},
+			topic: topicVal,
+		};
+		lapDataArray.push(newLapData);
+		return lapDataArray;
 	};
 
 	const handleLapTimings = () => {
-		setLaps((prev) => {
-			const lapArray = [...prev] as React.ReactElement[];
-			const lapArrayIdx = lapArray.length - 1;
-			if (lapArray[lapArrayIdx] !== undefined) {
-				lapArray[lapArrayIdx] = React.cloneElement(
-					lapArray[lapArrayIdx],
-					{ start: false }
-				);
-			}
+		setLapsData((prev) => {
+			const lapsDataArray = [...prev];
+			const lapsDataArrayIdx = lapsDataArray.length - 1;
+			lapsDataArray[lapsDataArrayIdx].started = false;
 			setTopicVal("");
-			return addNewLap(lapArray);
+			return addNewLapData(lapsDataArray);
 		});
 	};
 
-	localStorage.setItem("Laps", JSON.stringify(laps));
+	// localStorage.setItem("Laps", JSON.stringify(laps));
+
+	console.log("Laps:", lapsData);
 
 	return (
 		<>
@@ -117,7 +134,7 @@ function App() {
 							onClick={() => {
 								// Block for when the user starts the timer
 								// without setting any topic
-								if (topicVal === "" && laps.length < 1) {
+								if (topicVal === "" && lapsData.length < 1) {
 									alert("Please enter topic");
 
 									// Block is for when the user will start the
@@ -131,11 +148,11 @@ function App() {
 										started: true,
 										stopped: false,
 									});
-									setLaps(addNewLap(laps));
+									setLapsData(addNewLapData(lapsData));
 									setTopicVal("");
 
-									// block for when stop is pressed and the timer is waiting
-									// for the user to start it back up
+									// block for when the timer is in the stop stage and
+									// the user presses the start to start the timer back up
 								} else if (
 									timerScheduler.started === false &&
 									timerScheduler.stopped === true
@@ -144,16 +161,14 @@ function App() {
 										started: true,
 										stopped: false,
 									});
-									setLaps((prev) => {
-										const lapArray = [
-											...prev,
-										] as React.ReactElement[];
-										const lastIdx = lapArray.length - 1;
-										lapArray[lastIdx] = React.cloneElement(
-											lapArray[lastIdx],
-											{ start: true }
-										);
-										return lapArray;
+									setLapsData((prev) => {
+										const lapsDataArray = [...prev];
+										const lapsDataArrayIdx =
+											lapsDataArray.length - 1;
+										lapsDataArray[
+											lapsDataArrayIdx
+										].started = true;
+										return lapsDataArray;
 									});
 
 									// this block is for when the user has started the timer and
@@ -187,22 +202,20 @@ function App() {
 									started: false,
 									stopped: true,
 								});
-								setLaps((prev) => {
-									const lapArray = [
-										...prev,
-									] as React.ReactElement[];
-									const lastIdx = lapArray.length - 1;
-									lapArray[lastIdx] = React.cloneElement(
-										lapArray[lastIdx],
-										{ start: false }
-									);
-									return lapArray;
+								setLapsData((prev) => {
+									const lapsDataArray = [...prev];
+									const lapsDataLastIdx =
+										lapsDataArray.length - 1;
+									lapsDataArray[lapsDataLastIdx].started =
+										false;
+									return lapsDataArray;
 								});
 								// block for reset
 							} else {
-								setLaps([]);
+								setLapsData([]);
 								setTimer({ hours: 0, minutes: 0, seconds: 0 });
 								setStartedOnce(false);
+								setTopicVal("");
 								localStorage.removeItem("Laps");
 							}
 						}}
@@ -213,7 +226,18 @@ function App() {
 
 				{/* Lap part */}
 				<div className="flex flex-col-reverse gap-5">
-					{laps}
+					{lapsData.map((lap) => {
+						return (
+							<Lap
+								key={lap.id}
+								idx={lap.id}
+								start={lap.started}
+								topic={lap.topic}
+								topicChangeCb={(val) => topicChangeHandler(val)}
+								lapAddCb={(val) => lapAddHandler(val)}
+							/>
+						);
+					})}
 					{/* <Lap /> */}
 				</div>
 			</div>

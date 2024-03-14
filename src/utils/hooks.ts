@@ -19,6 +19,44 @@ export const useDate = (): { date: string; time: string } => {
 	return { date, time };
 };
 
+type Time = { seconds: number; minutes: number; hours: number };
+export const useStartTimer = (started: boolean) => {
+	const [newTime, setNewTime] = useState<Time>({
+		hours: 0,
+		minutes: 0,
+		seconds: 0,
+	});
+
+	useEffect(() => {
+		if (started === true) {
+			if (newTime.minutes === 60) {
+				setNewTime((prev) => ({
+					hours: prev.hours + 1,
+					minutes: 0,
+					seconds: 0,
+				}));
+			} else if (newTime.seconds === 60) {
+				setNewTime((prev) => ({
+					...prev,
+					minutes: prev.minutes + 1,
+					seconds: 0,
+				}));
+			}
+
+			const interval = setInterval(() => {
+				setNewTime((prev) => ({
+					...prev,
+					seconds: prev.seconds + 1,
+				}));
+			}, 1000);
+
+			return () => clearInterval(interval);
+		}
+	}, [newTime.seconds, newTime.minutes, newTime.hours, started]);
+
+	return newTime;
+};
+
 export const useTimerScheduler = (): {
 	timerScheduler: { started: boolean; stopped: boolean };
 	setTimerScheduler: React.Dispatch<

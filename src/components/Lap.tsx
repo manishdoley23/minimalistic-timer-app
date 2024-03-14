@@ -1,35 +1,53 @@
 import { useEffect, useState } from "react";
-import { useTimerScheduler } from "../utils/hooks";
+import { useStartTimer } from "../utils/hooks";
 
 const Lap = ({
 	idx,
 	topicChangeCb,
+	lapAddCb,
 	topic,
 	start,
 }: {
 	idx: number;
-	topicChangeCb: React.Dispatch<{ id: number; nTopic: string }>;
+	topicChangeCb: React.Dispatch<{ idz: number; nTopic: string }>;
+	lapAddCb: React.Dispatch<{
+		id: number;
+		hours: number;
+		minutes: number;
+		seconds: number;
+	}>;
 	topic: string;
 	start: boolean;
 }) => {
-	const { setTimerScheduler, timer } = useTimerScheduler();
+	// const { setTimerScheduler } = useTimerScheduler();
 	const [newTopic, setNewTopic] = useState(topic);
+	const newTime = useStartTimer(start);
 
-	const onTopicChange = () => topicChangeCb({ id: idx, nTopic: newTopic });
-
+	const onTopicChange = () => topicChangeCb({ idz: idx, nTopic: newTopic });
 	useEffect(() => {
-		if (start === true) {
-			setTimerScheduler({
-				started: true,
-				stopped: false,
-			});
-		} else {
-			setTimerScheduler({
-				started: false,
-				stopped: true,
+		if (start === false) {
+			lapAddCb({
+				id: idx,
+				hours: newTime.hours,
+				minutes: newTime.minutes,
+				seconds: newTime.seconds,
 			});
 		}
-	}, [start, setTimerScheduler]);
+	}, [start]);
+
+	// useEffect(() => {
+	// 	if (start === true) {
+	// 		setTimerScheduler({
+	// 			started: true,
+	// 			stopped: false,
+	// 		});
+	// 	} else {
+	// 		setTimerScheduler({
+	// 			started: false,
+	// 			stopped: true,
+	// 		});
+	// 	}
+	// }, [start, setTimerScheduler]);
 
 	return (
 		<div className="flex gap-5">
@@ -43,7 +61,7 @@ const Lap = ({
 				{/* useContext or useRef for changing the topic from the child ?? */}
 			</p>
 			<p>
-				{timer.hours} : {timer.minutes} : {timer.seconds}
+				{newTime.hours} : {newTime.minutes} : {newTime.seconds}
 			</p>
 		</div>
 	);
