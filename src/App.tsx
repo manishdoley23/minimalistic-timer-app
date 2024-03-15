@@ -1,6 +1,5 @@
 import clsx from "clsx";
 
-import React, { useEffect } from "react";
 import { useState } from "react";
 
 import { useTimerScheduler } from "./utils/hooks";
@@ -8,12 +7,12 @@ import { useTimerScheduler } from "./utils/hooks";
 import Lap from "./components/Lap";
 import Date from "./components/Date";
 
-// const getFromLocalStorage = (): React.ReactNode[] => {
-// 	const lapArrayString = localStorage.getItem("Laps");
-// 	const lapArray = lapArrayString !== null ? JSON.parse(lapArrayString) : [];
-// 	console.log("LapArray:", typeof lapArray, { lapArray });
-// 	return [] as React.ReactNode[];
-// };
+const getFromLocalStorage = (): LapData[] => {
+	const lapArrayString = localStorage.getItem("Laps");
+	const lapArray = lapArrayString !== null ? JSON.parse(lapArrayString) : [];
+	console.log("LapArray:", typeof lapArray, lapArray);
+	return lapArray;
+};
 
 type LapData = {
 	id: number;
@@ -37,7 +36,7 @@ function App() {
 	} = useTimerScheduler();
 
 	const [topicVal, setTopicVal] = useState("");
-	const [lapsData, setLapsData] = useState<LapData[]>([]);
+	const [lapsData, setLapsData] = useState<LapData[]>(getFromLocalStorage());
 
 	const topicChangeHandler = ({
 		idz,
@@ -95,8 +94,6 @@ function App() {
 			return addNewLapData(lapsDataArray);
 		});
 	};
-
-	// localStorage.setItem("Laps", JSON.stringify(laps));
 
 	console.log("Laps:", lapsData);
 
