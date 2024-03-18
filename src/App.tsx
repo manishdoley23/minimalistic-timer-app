@@ -10,11 +10,11 @@ import Date from "./components/Date";
 const getFromLocalStorage = (): LapData[] => {
 	const lapArrayString = localStorage.getItem("Laps");
 	const lapArray = lapArrayString !== null ? JSON.parse(lapArrayString) : [];
-	console.log("LapArray:", typeof lapArray, lapArray);
+	// console.log("LapArray:", typeof lapArray, lapArray);
 	return lapArray;
 };
 
-type LapData = {
+interface LapData {
 	id: number;
 	time: {
 		seconds: number;
@@ -23,7 +23,7 @@ type LapData = {
 	};
 	started: boolean;
 	topic: string;
-};
+}
 
 function App() {
 	const {
@@ -61,6 +61,7 @@ function App() {
 	}) => {
 		setLapsData((prev) => {
 			const lapsDataArray = [...prev];
+			console.log("lapsDataArray:", lapsDataArray);
 			const lapDataIdx = lapsDataArray.findIndex(
 				(lap) => lap.id === val.id
 			);
@@ -90,12 +91,13 @@ function App() {
 			const lapsDataArray = [...prev];
 			const lapsDataArrayIdx = lapsDataArray.length - 1;
 			lapsDataArray[lapsDataArrayIdx].started = false;
+			localStorage.setItem("Laps", JSON.stringify(lapsDataArray));
 			setTopicVal("");
 			return addNewLapData(lapsDataArray);
 		});
 	};
 
-	console.log("Laps:", lapsData);
+	// console.log("Laps:", lapsData);
 
 	return (
 		<>
