@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../../../context/auth.provider";
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -10,6 +11,9 @@ const Login = () => {
 		email: "",
 		password: "",
 	});
+
+	const { user, login } = useContext(AuthContext);
+	console.log("user:", user);
 
 	const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -31,6 +35,7 @@ const Login = () => {
 			if (response.ok) {
 				console.log("Success");
 				toast(message);
+				login("logged in");
 				setTimeout(() => {
 					navigate("/time");
 				}, 5000);

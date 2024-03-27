@@ -1,11 +1,12 @@
 import clsx from "clsx";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { useTimerScheduler } from "../../utils/hooks";
 
 import Lap from "../../components/Lap";
 import Date from "../../components/Date";
+import { AuthContext } from "../../context/auth.provider";
 
 const getFromLocalStorage = (): LapData[] => {
 	const lapArrayString = localStorage.getItem("Laps");
@@ -35,6 +36,7 @@ function Timer() {
 		setStartedOnce,
 	} = useTimerScheduler();
 
+	const { user } = useContext(AuthContext);
 	const [topicVal, setTopicVal] = useState("");
 	const [lapsData, setLapsData] = useState<LapData[]>(getFromLocalStorage());
 
@@ -101,7 +103,10 @@ function Timer() {
 
 	return (
 		<>
-			<div className="h-screen w-full flex flex-col items-center justify-center">
+			<div className="h-screen w-full flex flex-col items-center justify-center relative">
+				{user && (
+					<p className="absolute top-10 left-20">User logged in</p>
+				)}
 				<Date />
 				<div>
 					{timer.hours} : {timer.minutes} : {timer.seconds}

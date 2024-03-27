@@ -7,6 +7,7 @@ import "./index.css";
 import Timer from "./pages/timer/Timer.tsx";
 import Signup from "./pages/auth/signup/Signup.tsx";
 import Login from "./pages/auth/login/Login.tsx";
+import { AuthProvider } from "./context/auth.provider.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -34,6 +35,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
-		<RouterProvider router={router} />
+		<AuthProvider>
+			<RouterProvider router={router} />
+		</AuthProvider>
 	</React.StrictMode>
 );
