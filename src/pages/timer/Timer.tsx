@@ -8,13 +8,6 @@ import Lap from "../../components/Lap";
 import Date from "../../components/Date";
 import { AuthContext } from "../../context/auth.provider";
 
-const getFromLocalStorage = (): LapData[] => {
-	const lapArrayString = localStorage.getItem("Laps");
-	const lapArray = lapArrayString !== null ? JSON.parse(lapArrayString) : [];
-	// console.log("LapArray:", typeof lapArray, lapArray);
-	return lapArray;
-};
-
 interface LapData {
 	id: number;
 	time: {
@@ -38,7 +31,7 @@ function Timer() {
 
 	const { user } = useContext(AuthContext);
 	const [topicVal, setTopicVal] = useState("");
-	const [lapsData, setLapsData] = useState<LapData[]>(getFromLocalStorage());
+	const [lapsData, setLapsData] = useState<LapData[]>([]);
 
 	const topicChangeHandler = ({
 		idz,
@@ -105,7 +98,9 @@ function Timer() {
 		<>
 			<div className="h-screen w-full flex flex-col items-center justify-center relative">
 				{user && (
-					<p className="absolute top-10 left-20">User logged in</p>
+					<p className="absolute top-10 left-20">
+						Welcome, {user.email.split("@")[0]}
+					</p>
 				)}
 				<Date />
 				<div>

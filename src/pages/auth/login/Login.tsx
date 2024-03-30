@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+
 import { AuthContext } from "../../../context/auth.provider";
 
 const Login = () => {
@@ -12,8 +13,7 @@ const Login = () => {
 		password: "",
 	});
 
-	const { user, login } = useContext(AuthContext);
-	console.log("user:", user);
+	const { setUser } = useContext(AuthContext);
 
 	const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -31,25 +31,25 @@ const Login = () => {
 				}
 			);
 
-			console.log("response:", response);
-			const { message } = await response.json();
-			console.log("message:", message);
-			const resHeaders = response.headers;
-			console.log("resHeaders:", resHeaders);
-			const resHeaderCookie = response.headers.get("Set-Cookie");
-			console.log("resHeaderCookie:", resHeaderCookie);
-
-			// if (response.ok) {
-			// 	console.log("Success");
-			// 	toast(message);
-			// 	login("logged in");
-			// 	setTimeout(() => {
-			// 		navigate("/time");
-			// 	}, 5000);
-			// } else {
-			// 	toast(message);
-			// 	console.error("Error in response");
-			// }
+			const { message, accessToken } = await response.json();
+			if (response.ok) {
+				console.log("Success");
+				toast(message);
+				setUser({
+					accessToken,
+					email: formData.email,
+					password: formData.password,
+				});
+				setTimeout(() => {
+					navigate("/time");
+				}, 5000);
+				// setTimeout(() => {
+				// 	window.location.reload();
+				// }, 5000);
+			} else {
+				toast(message);
+				console.error("Error in response");
+			}
 		} catch (error) {
 			console.log("error in signup:", error);
 			throw error;
@@ -102,10 +102,11 @@ const Login = () => {
 			<button
 				onClick={async () => {
 					await fetch(`${import.meta.env.VITE_BACKEND}/check`, {
+						method: "GET",
 						headers: {
 							"Content-type": "application/json",
-							Authorization: "Bearer tukka",
 						},
+						credentials: "include",
 					});
 				}}
 			>

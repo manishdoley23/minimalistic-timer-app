@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
@@ -81,6 +83,7 @@ const Signup = () => {
 				/>
 
 				<button>SUBMIT</button>
+				<button onClick={() => navigate("/auth/login")}>GO TO LOGIN</button>
 			</form>
 		</div>
 	);

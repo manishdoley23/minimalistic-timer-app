@@ -8,6 +8,7 @@ import Timer from "./pages/timer/Timer.tsx";
 import Signup from "./pages/auth/signup/Signup.tsx";
 import Login from "./pages/auth/login/Login.tsx";
 import { AuthProvider } from "./context/auth.provider.tsx";
+import RequireAuth from "./layout/RequireAuth.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -19,14 +20,14 @@ const router = createBrowserRouter([
 		element: <Timer />,
 	},
 	{
-		path: "/auth",
+		// element: <RequireAuth />,
 		children: [
 			{
-				path: "signup",
+				path: "/auth/signup",
 				element: <Signup />,
 			},
 			{
-				path: "login",
+				path: "/auth/login",
 				element: <Login />,
 			},
 		],
