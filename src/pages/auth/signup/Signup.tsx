@@ -30,10 +30,11 @@ const Signup = () => {
 			const { message } = await response.json();
 			if (response.ok) {
 				toast(message);
-				console.log("Success");
+				setTimeout(() => {
+					navigate("/auth/login")
+				}, 5000)
 			} else {
 				toast(message);
-				console.error("Error in response");
 			}
 		} catch (error) {
 			console.log("error in signup:", error);
@@ -83,7 +84,6 @@ const Signup = () => {
 				/>
 
 				<button>SUBMIT</button>
-				<button onClick={() => navigate("/auth/login")}>GO TO LOGIN</button>
 			</form>
 		</div>
 	);

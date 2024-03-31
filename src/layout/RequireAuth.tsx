@@ -8,7 +8,7 @@ const RequireAuth = () => {
 	return (
 		<div>
 			<p>Hello</p>
-			{!user?.accessToken ? (
+			{user?.accessToken ? (
 				<Outlet />
 			) : (
 				<Navigate

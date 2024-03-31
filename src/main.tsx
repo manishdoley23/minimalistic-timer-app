@@ -1,14 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import "./index.css";
+import { AuthProvider } from "./context/auth.provider.tsx";
+
+import App from "./App.tsx";
 import Timer from "./pages/timer/Timer.tsx";
 import Signup from "./pages/auth/signup/Signup.tsx";
 import Login from "./pages/auth/login/Login.tsx";
-import { AuthProvider } from "./context/auth.provider.tsx";
+import Welcome from "./pages/welcome/Welcome.tsx";
+
 import RequireAuth from "./layout/RequireAuth.tsx";
+import PersistAuth from "./layout/PersistAuth.tsx";
+
+import "./index.css";
 
 const router = createBrowserRouter([
 	{
@@ -20,15 +25,29 @@ const router = createBrowserRouter([
 		element: <Timer />,
 	},
 	{
-		// element: <RequireAuth />,
+		path: "/auth",
 		children: [
 			{
-				path: "/auth/signup",
+				path: "signup",
 				element: <Signup />,
 			},
 			{
-				path: "/auth/login",
+				path: "login",
 				element: <Login />,
+			},
+		],
+	},
+	{
+		element: <PersistAuth />,
+		children: [
+			{
+				element: <RequireAuth />,
+				children: [
+					{
+						path: "/welcome",
+						element: <Welcome />,
+					},
+				],
 			},
 		],
 	},

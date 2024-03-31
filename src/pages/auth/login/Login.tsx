@@ -41,11 +41,8 @@ const Login = () => {
 					password: formData.password,
 				});
 				setTimeout(() => {
-					navigate("/time");
+					navigate("/welcome");
 				}, 5000);
-				// setTimeout(() => {
-				// 	window.location.reload();
-				// }, 5000);
 			} else {
 				toast(message);
 				console.error("Error in response");
