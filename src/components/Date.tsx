@@ -1,4 +1,4 @@
-import { useDate } from "../utils/hooks";
+import { useDate } from "../hooks/time.hook";
 
 const Date = () => {
 	const { date, time } = useDate();

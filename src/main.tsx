@@ -9,6 +9,7 @@ import Timer from "./pages/timer/Timer.tsx";
 import Signup from "./pages/auth/signup/Signup.tsx";
 import Login from "./pages/auth/login/Login.tsx";
 import Welcome from "./pages/welcome/Welcome.tsx";
+import Tim from "./pages/tim/Tim.tsx";
 
 import RequireAuth from "./layout/RequireAuth.tsx";
 import PersistAuth from "./layout/PersistAuth.tsx";
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
 	{
 		path: "/time",
 		element: <Timer />,
+	},
+	{
+		path: "/tim",
+		element: <Tim />,
 	},
 	{
 		path: "/auth",

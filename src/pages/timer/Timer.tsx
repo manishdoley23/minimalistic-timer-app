@@ -2,11 +2,10 @@ import clsx from "clsx";
 
 import { useContext, useState } from "react";
 
-import { useTimerScheduler } from "../../utils/hooks";
-
 import Lap from "../../components/Lap";
 import Date from "../../components/Date";
 import { AuthContext } from "../../context/auth.provider";
+import { useTimerScheduler } from "../../hooks/time.hook";
 
 interface LapData {
 	id: number;
