@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { TimeContext, TimeType } from "../context/time.provider";
+
+export const useTime = () => useContext(TimeContext);
 
 export const useDate = (): { date: string; time: string } => {
 	const [stateDate, setStateDate] = useState<Date>(new Date());
@@ -19,9 +22,45 @@ export const useDate = (): { date: string; time: string } => {
 	return { date, time };
 };
 
-type Time = { seconds: number; minutes: number; hours: number };
-export const useStartTimer = (started: boolean) => {
-	const [newTime, setNewTime] = useState<Time>({
+export const useStartTimer = (started: boolean, time: TimeType) => {
+	const [newTime, setNewTime] = useState<TimeType>(time);
+
+	useEffect(() => {
+		setNewTime(time);
+	}, [time]);
+
+	useEffect(() => {
+		if (started === true) {
+			if (newTime.minutes === 0) {
+				setNewTime((prev) => ({
+					hours: prev.hours - 1,
+					minutes: 59,
+					seconds: 59,
+				}));
+			} else if (newTime.seconds === 0) {
+				setNewTime((prev) => ({
+					...prev,
+					minutes: prev.minutes - 1,
+					seconds: 59,
+				}));
+			}
+
+			const interval = setInterval(() => {
+				setNewTime((prev) => ({
+					...prev,
+					seconds: prev.seconds - 1,
+				}));
+			}, 1000);
+
+			return () => clearInterval(interval);
+		}
+	}, [newTime.seconds, newTime.minutes, newTime.hours, started]);
+
+	return newTime;
+};
+
+export const useStartStopWatch = (started: boolean) => {
+	const [newTime, setNewTime] = useState<TimeType>({
 		hours: 0,
 		minutes: 0,
 		seconds: 0,

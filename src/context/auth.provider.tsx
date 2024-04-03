@@ -11,7 +11,7 @@ type AuthContextType = {
 };
 
 export const AuthContext = createContext<AuthContextType>({
-	setUser: () => {},
+	setUser: (user) => user,
 	user: null,
 });
 

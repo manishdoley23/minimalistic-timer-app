@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useStartTimer } from "../utils/hooks";
+import { useStartStopWatch } from "../hooks/time.hook";
 
 const Lap = ({
 	idx,
@@ -21,7 +21,7 @@ const Lap = ({
 }) => {
 	// const { setTimerScheduler } = useTimerScheduler();
 	const [newTopic, setNewTopic] = useState(topic);
-	const newTime = useStartTimer(start);
+	const newTime = useStartStopWatch(start);
 
 	const onTopicChange = () => topicChangeCb({ idz: idx, nTopic: newTopic });
 	useEffect(() => {
