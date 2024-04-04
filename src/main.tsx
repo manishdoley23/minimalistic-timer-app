@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { AuthProvider } from "./context/auth.provider.tsx";
+import AuthProvider from "./context/auth.provider.tsx";
+import TimeProvider from "./context/time.provider.tsx";
 
 import App from "./App.tsx";
 import Timer from "./pages/timer/Timer.tsx";
@@ -61,7 +62,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
 		<AuthProvider>
-			<RouterProvider router={router} />
+			<TimeProvider>
+				<RouterProvider router={router} />
+			</TimeProvider>
 		</AuthProvider>
 	</React.StrictMode>
 );

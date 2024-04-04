@@ -1,15 +1,13 @@
-import clsx from "clsx";
 import { useState } from "react";
-import { useTime } from "../hooks/time.hook";
-import Counter from "./Counter";
+import { useTime } from "../../hooks/time.hook";
+import clsx from "clsx";
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const MINUTES = Array.from({ length: 60 }, (_, i) => i);
 const SECONDS = Array.from({ length: 60 }, (_, i) => i);
 
-const CountDown = () => {
-	// const { setStarted, setTime, started, time } = useTime();
-	const [started, setStarted] = useState(false);
+const SetTime = () => {
+	const { setStarted, setTime } = useTime();
 	const [countDown, setCountDown] = useState<{
 		hours: number;
 		minutes: number;
@@ -43,15 +41,11 @@ const CountDown = () => {
 
 	const startTimer = () => {
 		setStarted(true);
-		// setTime({
-		// 	hours: countDown.hours,
-		// 	minutes: countDown.minutes,
-		// 	seconds: countDown.seconds,
-		// });
+		setTime(countDown);
 	};
 
 	return (
-		<div>
+		<>
 			<div className="w-full flex">
 				<div className="flex flex-col w-1/3">
 					<label>Hours</label>
@@ -146,11 +140,8 @@ const CountDown = () => {
 				</div>
 			</div>
 			<button onClick={startTimer}>CLICK TO SAVE</button>
-			<div>
-				<Counter started={started} time={countDown} />
-			</div>
-		</div>
+		</>
 	);
 };
 
-export default CountDown;
+export default SetTime;

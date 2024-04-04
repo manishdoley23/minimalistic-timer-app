@@ -22,8 +22,9 @@ export const useDate = (): { date: string; time: string } => {
 	return { date, time };
 };
 
-export const useStartTimer = (started: boolean, time: TimeType) => {
-	const [newTime, setNewTime] = useState<TimeType>(time);
+export const useStartTimer = () => {
+	const { time, started } = useTime();
+	const [newTime, setNewTime] = useState(time);
 
 	useEffect(() => {
 		setNewTime(time);
@@ -31,30 +32,63 @@ export const useStartTimer = (started: boolean, time: TimeType) => {
 
 	useEffect(() => {
 		if (started === true) {
-			if (newTime.minutes === 0) {
-				setNewTime((prev) => ({
-					hours: prev.hours - 1,
-					minutes: 59,
-					seconds: 59,
-				}));
-			} else if (newTime.seconds === 0) {
-				setNewTime((prev) => ({
-					...prev,
-					minutes: prev.minutes - 1,
-					seconds: 59,
-				}));
+			if (
+				newTime.hours === 0 &&
+				newTime.minutes === 0 &&
+				newTime.seconds === 0
+			) {
+				return;
 			}
 
+			if (newTime.seconds === 0 && newTime.minutes === 0) {
+				console.log("here 1");
+				console.log(
+					"newtime inside the useEffect hook:",
+					newTime.hours
+				);
+				setNewTime((prev) => {
+					if (prev.hours > 0) {
+						return {
+							hours: prev.hours - 1,
+							minutes: 59,
+							seconds: 59,
+						};
+					} else {
+						return {
+							hours: 0,
+							minutes: 0,
+							seconds: 0,
+						};
+					}
+				});
+			} else if (newTime.seconds === 0) {
+				console.log("here 2");
+				setNewTime((prev) => {
+					if (prev.minutes > 0) {
+						return {
+							hours: prev.hours,
+							minutes: prev.minutes - 1,
+							seconds: 59,
+						};
+					} else {
+						return {
+							hours: 0,
+							minutes: 0,
+							seconds: 0,
+						};
+					}
+				});
+			}
 			const interval = setInterval(() => {
+				console.log("here 3");
 				setNewTime((prev) => ({
 					...prev,
 					seconds: prev.seconds - 1,
 				}));
 			}, 1000);
-
 			return () => clearInterval(interval);
 		}
-	}, [newTime.seconds, newTime.minutes, newTime.hours, started]);
+	}, [started, newTime]);
 
 	return newTime;
 };
@@ -135,7 +169,7 @@ export const useTimerScheduler = (): {
 	});
 
 	useEffect(() => {
-		let intervalIdsec: number;
+		let intervalIdsec: NodeJS.Timeout;
 		if (timerScheduler.started === true) {
 			setStartedOnce(true);
 			if (timer.seconds === 60) {

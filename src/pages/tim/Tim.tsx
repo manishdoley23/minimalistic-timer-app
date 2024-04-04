@@ -1,4 +1,4 @@
-import CountDown from "../../components/CountDown";
+import CountDown from "../../components/tim/CountDown";
 
 const Tim = () => {
 	return (

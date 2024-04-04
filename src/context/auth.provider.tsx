@@ -15,7 +15,7 @@ export const AuthContext = createContext<AuthContextType>({
 	user: null,
 });
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
 
 	return (
@@ -24,3 +24,5 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		</AuthContext.Provider>
 	);
 };
+
+export default AuthProvider;

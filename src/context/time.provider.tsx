@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export type TimeType = {
 	hours: number;
@@ -35,6 +35,14 @@ const TimeProvider = ({ children }: { children: React.ReactNode }) => {
 		minutes: 0,
 		seconds: 0,
 	});
+
+	console.log("time in context:", time);
+
+	// console.log("ran");
+
+	// useEffect(() => {
+	// 	setTime(time);
+	// }, [time, started]);
 
 	return (
 		<TimeContext.Provider value={{ started, setStarted, time, setTime }}>
