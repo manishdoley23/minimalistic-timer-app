@@ -2,4 +2,4 @@
 
 ## Description
 
-[Work in progress]
+[WIP]
