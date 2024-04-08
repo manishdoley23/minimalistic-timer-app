@@ -21,11 +21,6 @@ const PersistAuth = () => {
 		!user?.accessToken ? verifyRefreshToken() : setLoading(false);
 	}, []);
 
-	useEffect(() => {
-		console.log("token:", user?.accessToken);
-		console.log("loading:", loading);
-	}, []);
-
 	return <>{!loading ? <Outlet /> : <div>Loading...</div>}</>;
 };
 

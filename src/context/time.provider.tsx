@@ -1,51 +1,67 @@
-import { createContext, useEffect, useState } from "react";
-
-export type TimeType = {
-	hours: number;
-	minutes: number;
-	seconds: number;
-};
+import { createContext, useState } from "react";
+import { TimeType } from "../types";
 
 type TimeContextType = {
 	started: boolean;
+	timerTime: TimeType;
+	timerTimeBlock: TimeType[];
+	stopWatchTime: TimeType;
+	stopWatchTimeBlock: TimeType[];
 	setStarted: (bool: boolean) => void;
-	time: {
-		hours: number;
-		minutes: number;
-		seconds: number;
-	};
-	setTime: (val: TimeType) => void;
+	setTimerTime: (timerTime: TimeType) => void;
+	setTimerTimeBlock: (timerTimeBlock: TimeType[]) => void;
+	setStopWatchTime: (stopWatch: TimeType) => void;
+	setStopWatchTimeBlock: (stopWatchTimeBlock: TimeType[]) => void;
 };
 
 export const TimeContext = createContext<TimeContextType>({
 	started: false,
+	timerTime: { hours: 0, minutes: 0, seconds: 0 },
+	timerTimeBlock: [],
+	stopWatchTime: { hours: 0, minutes: 0, seconds: 0 },
+	stopWatchTimeBlock: [],
 	setStarted: () => {},
-	setTime: () => {},
-	time: {
-		hours: 0,
-		minutes: 0,
-		seconds: 0,
-	},
+	setTimerTime: () => {},
+	setTimerTimeBlock: () => {},
+	setStopWatchTime: () => {},
+	setStopWatchTimeBlock: () => {},
 });
 
+const getStopWatchTimeFromLocalStorage = (): TimeType => {
+	const stopWatchTime = localStorage.getItem("stopWatchTime");
+	if (stopWatchTime === null) return { hours: 0, minutes: 0, seconds: 0 };
+	else return JSON.parse(stopWatchTime);
+};
 const TimeProvider = ({ children }: { children: React.ReactNode }) => {
-	const [started, setStarted] = useState(false);
-	const [time, setTime] = useState<TimeType>({
+	const [started, setStarted] = useState(true);
+	const [timerTime, setTimerTime] = useState<TimeType>({
 		hours: 0,
 		minutes: 0,
 		seconds: 0,
 	});
-
-	console.log("time in context:", time);
-
-	// console.log("ran");
-
-	// useEffect(() => {
-	// 	setTime(time);
-	// }, [time, started]);
+	const [stopWatchTime, setStopWatchTime] = useState<TimeType>(
+		getStopWatchTimeFromLocalStorage()
+	);
+	const [timerTimeBlock, setTimerTimeBlock] = useState<TimeType[]>([]);
+	const [stopWatchTimeBlock, setStopWatchTimeBlock] = useState<TimeType[]>(
+		[]
+	);
 
 	return (
-		<TimeContext.Provider value={{ started, setStarted, time, setTime }}>
+		<TimeContext.Provider
+			value={{
+				started,
+				timerTime,
+				timerTimeBlock,
+				stopWatchTime,
+				stopWatchTimeBlock,
+				setStarted,
+				setTimerTime,
+				setTimerTimeBlock,
+				setStopWatchTime,
+				setStopWatchTimeBlock,
+			}}
+		>
 			{children}
 		</TimeContext.Provider>
 	);

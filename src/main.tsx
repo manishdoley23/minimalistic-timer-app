@@ -6,7 +6,6 @@ import AuthProvider from "./context/auth.provider.tsx";
 import TimeProvider from "./context/time.provider.tsx";
 
 import App from "./App.tsx";
-import Timer from "./pages/timer/Timer.tsx";
 import Signup from "./pages/auth/signup/Signup.tsx";
 import Login from "./pages/auth/login/Login.tsx";
 import Welcome from "./pages/welcome/Welcome.tsx";
@@ -21,10 +20,6 @@ const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <App />,
-	},
-	{
-		path: "/time",
-		element: <Timer />,
 	},
 	{
 		path: "/tim",

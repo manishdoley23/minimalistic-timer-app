@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { TimeContext, TimeType } from "../context/time.provider";
+import { TimeContext } from "../context/time.provider";
+import { TimeType } from "../types";
 
 export const useTime = () => useContext(TimeContext);
 
@@ -41,11 +42,6 @@ export const useStartTimer = () => {
 			}
 
 			if (newTime.seconds === 0 && newTime.minutes === 0) {
-				console.log("here 1");
-				console.log(
-					"newtime inside the useEffect hook:",
-					newTime.hours
-				);
 				setNewTime((prev) => {
 					if (prev.hours > 0) {
 						return {
@@ -62,7 +58,6 @@ export const useStartTimer = () => {
 					}
 				});
 			} else if (newTime.seconds === 0) {
-				console.log("here 2");
 				setNewTime((prev) => {
 					if (prev.minutes > 0) {
 						return {
@@ -80,7 +75,6 @@ export const useStartTimer = () => {
 				});
 			}
 			const interval = setInterval(() => {
-				console.log("here 3");
 				setNewTime((prev) => ({
 					...prev,
 					seconds: prev.seconds - 1,
@@ -135,11 +129,7 @@ export const useTimerScheduler = (): {
 	setTimerScheduler: React.Dispatch<
 		React.SetStateAction<{ started: boolean; stopped: boolean }>
 	>;
-	timer: {
-		seconds: number;
-		minutes: number;
-		hours: number;
-	};
+	timer: TimeType;
 	setTimer: React.Dispatch<
 		React.SetStateAction<{
 			seconds: number;
@@ -158,11 +148,7 @@ export const useTimerScheduler = (): {
 		started: false,
 		stopped: true,
 	});
-	const [timer, setTimer] = useState<{
-		seconds: number;
-		minutes: number;
-		hours: number;
-	}>({
+	const [timer, setTimer] = useState<TimeType>({
 		seconds: 0,
 		minutes: 0,
 		hours: 0,

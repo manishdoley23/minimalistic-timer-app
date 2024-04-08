@@ -1,24 +1,19 @@
 import clsx from "clsx";
 
-import { useContext, useState } from "react";
+import { useState } from "react";
 
-import Lap from "../../components/Lap";
-import Date from "../../components/Date";
-import { AuthContext } from "../../context/auth.provider";
+import Lap from "../Lap";
 import { useTimerScheduler } from "../../hooks/time.hook";
+import { TimeType } from "../../types";
 
 interface LapData {
 	id: number;
-	time: {
-		seconds: number;
-		minutes: number;
-		hours: number;
-	};
+	time: TimeType;
 	started: boolean;
 	topic: string;
 }
 
-function Timer() {
+function StopWatch() {
 	const {
 		timerScheduler,
 		setTimerScheduler,
@@ -28,7 +23,6 @@ function Timer() {
 		setStartedOnce,
 	} = useTimerScheduler();
 
-	const { user } = useContext(AuthContext);
 	const [topicVal, setTopicVal] = useState("");
 	const [lapsData, setLapsData] = useState<LapData[]>([]);
 
@@ -55,7 +49,6 @@ function Timer() {
 	}) => {
 		setLapsData((prev) => {
 			const lapsDataArray = [...prev];
-			console.log("lapsDataArray:", lapsDataArray);
 			const lapDataIdx = lapsDataArray.findIndex(
 				(lap) => lap.id === val.id
 			);
@@ -95,13 +88,8 @@ function Timer() {
 
 	return (
 		<>
-			<div className="h-screen w-full flex flex-col items-center justify-center relative">
-				{user && (
-					<p className="absolute top-10 left-20">
-						Welcome, {user.email.split("@")[0]}
-					</p>
-				)}
-				<Date />
+			<div className="w-full flex flex-col items-center justify-center relative">
+				{/* <Date /> */}
 				<div>
 					{timer.hours} : {timer.minutes} : {timer.seconds}
 				</div>
@@ -243,4 +231,4 @@ function Timer() {
 	);
 }
 
-export default Timer;
+export default StopWatch;
