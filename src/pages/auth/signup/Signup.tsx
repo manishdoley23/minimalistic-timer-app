@@ -26,13 +26,12 @@ const Signup = () => {
 				}
 			);
 
-			console.log("response:", response);
 			const { message } = await response.json();
 			if (response.ok) {
 				toast(message);
 				setTimeout(() => {
-					navigate("/auth/login")
-				}, 5000)
+					navigate("/auth/login");
+				}, 5000);
 			} else {
 				toast(message);
 			}

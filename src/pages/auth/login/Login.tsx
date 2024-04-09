@@ -2,9 +2,9 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 
-import "react-toastify/dist/ReactToastify.css";
-
 import { AuthContext } from "../../../context/auth.provider";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -38,7 +38,6 @@ const Login = () => {
 				setUser({
 					accessToken,
 					email: formData.email,
-					password: formData.password,
 				});
 				setTimeout(() => {
 					navigate("/welcome");
@@ -96,19 +95,6 @@ const Login = () => {
 
 				<button>SUBMIT</button>
 			</form>
-			<button
-				onClick={async () => {
-					await fetch(`${import.meta.env.VITE_BACKEND}/check`, {
-						method: "GET",
-						headers: {
-							"Content-type": "application/json",
-						},
-						credentials: "include",
-					});
-				}}
-			>
-				TEST
-			</button>
 		</div>
 	);
 };
