@@ -38,7 +38,6 @@ const Login = () => {
 				setUser({
 					accessToken,
 					email: formData.email,
-					password: formData.password,
 				});
 				setTimeout(() => {
 					navigate("/welcome");

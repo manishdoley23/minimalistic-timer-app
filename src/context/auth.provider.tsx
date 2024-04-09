@@ -2,7 +2,6 @@ import { createContext, useState } from "react";
 
 export type User = {
 	accessToken: string;
-	password: string;
 	email: string;
 };
 type AuthContextType = {
